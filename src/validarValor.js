@@ -29,7 +29,7 @@ class ValidarValor{
             }
             else{
                 valorUsuario = (prompt(mensagem))
-                valorUsuario = valorUsuario.replace(/[^a-zA-Z]/g,'');
+                valorUsuario = valorUsuario.replace(/[^a-zA-Z0-9\s]/g,'');
                 valorValido = this.validarString(valorUsuario);
             }
 
