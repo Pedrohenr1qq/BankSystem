@@ -8,11 +8,18 @@ var validValue = new ValidarValor();
 
 // ======================== FUNCTION MAIN ===========================
 function main() {
-    let valorUsuario = 4;
+    let valorUsuario = "";
     let contaCorrente, contaPoupanca;
     let contaEscolhida;
 
     console.log("Seja bem vindo caro cliente ao banco FoxBank! Vamos cadastrar seus dados ...\n");
+    
+    valorUsuario = validValue.validarValorUsuario("Você quer criar uma conta (digite y|s para SIM e qualquer outro valor para NÂO) ? ", "string");
+    console.log("");
+    valorUsuario = valorUsuario.toUpperCase();
+
+    if((valorUsuario == 'Y') || (valorUsuario == "S")) {
+    console.log("Certo! Vamos criar sua conta. Por favor, preencha os campos abaixo:\n");
 
     let nome = pegarNome();
 
@@ -20,6 +27,8 @@ function main() {
     contaPoupanca = new ContaPoupanca(nome);
 
     console.log(`É um prazer tê-lo conosco Sr.(a) ${nome}.\n`);
+
+    valorUsuario = 4;
 
     do{
         if(valorUsuario == 4) valorUsuario = escolherTipoConta();
@@ -42,8 +51,11 @@ function main() {
 
     }while(valorUsuario != 0);
 
+    }
+    else{
+        console.log("Certo!")
+    }
     console.log("Obrigado por escolher nossos serviços. Encerrando atendimento ...\n");
-
     console.log("Programa finalizado!");
 }
 
@@ -60,7 +72,6 @@ function pegarNome(){
     
     return nomePadronizado;
 }
-
 
 function escolherTipoConta(){
     let valorUsuario;
@@ -87,8 +98,6 @@ function escolherTipoConta(){
     console.log("-----------------------------\n");
     return valorUsuario;
 }
-
-
 
 function definirOperacao(){
     let valorUsuario;
