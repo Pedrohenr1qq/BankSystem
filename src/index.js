@@ -1,46 +1,111 @@
-const Conta = require("./conta");
+// ======================== DEPENDENCIES ============================
 const ContaCorrente = require("./contaCorrente");
+const ContaPoupanca = require("./contaPoupanca")
 const ValidarValor = require("./validarValor");
 
-validValue = new ValidarValor();
+// ========================= GLOBAL OBJECTS =========================
+var validValue = new ValidarValor();
 
+// ======================== FUNCTION MAIN ===========================
 function main() {
-    let valorUsuario = 0;
-    let conta;
-    console.log("Seja bem vindo caro cliente ao banco FoxBank! Vamos cadastrar seus dados ...");
+    let valorUsuario = 5;
+    let contaCorrente, contaPoupanca;
+    let contaEscolhida;
+
+    console.log("Seja bem vindo caro cliente ao banco FoxBank! Vamos cadastrar seus dados ...\n");
 
     let nome = validValue.validarValorUsuario("Digite seu nome: ", "string");
-    let saldo = validValue.validarValorUsuario("Digite seu saldo atual: ", "numero");
 
-    console.log("\nCerto. Criando sua conta ...");
-    conta = new Conta(nome, saldo);
-    console.log("Conta criada com sucesso.\n");
+    console.log("\nCerto. Cadastrando seus dados ...");
+    contaCorrente = new ContaCorrente(nome);
+    contaPoupanca = new ContaPoupanca(nome);
+    console.log("Dados cadastrados com sucesso.\n");
 
-    console.log(`É um prazer tê-lo conosco Sr.(a) ${conta.titular}.`);
+    console.log(`É um prazer tê-lo conosco Sr.(a) ${nome}.\n`);
 
     do{
-        console.log(`\nEscolha uma das opções abaixo para o que deseja fazer: `);
-        console.log("1 - Consultar saldo");
-        console.log("2 - Depositar valor");
-        console.log("3 - Sacar valor");
-        console.log("4 - Alterar nome");
-        console.log("0 - Sair do programa");
+        if(valorUsuario == 5) valorUsuario = escolherTipoConta();
 
-        console.log("");
-        valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
-        console.log("");
-        realizarOperacao(conta, valorUsuario);
+        if(valorUsuario == 1) {
+            contaEscolhida = contaCorrente;
+        }else if(valorUsuario == 2 ){
+            contaEscolhida = contaPoupanca;
+        }else {
+            // Apenas continue o programa;
+        }
+
+        if((valorUsuario == 1) || (valorUsuario == 2)) console.log(`Ok. Entrando na sua ${contaEscolhida.pegarTipoConta()}`);
+
+        if(valorUsuario != 0) {
+            valorUsuario = definirOperacao();
+            console.log("");
+    
+            valorUsuario = realizarOperacao(contaEscolhida, valorUsuario);
+        }
 
     }while(valorUsuario != 0);
+
+    console.log("\nObrigado por escolher nossos serviços. Encerrando atendimento ...\n");
 
     console.log("Programa finalizado!");
 }
 
+// =============================== FUNCTIONS =======================================
+
+function escolherTipoConta(){
+    let valorUsuario;
+
+    do{
+        console.log("-------------------------------")
+        console.log("Qual conta vocẽ deseja realizar operações? (Escolha uma das opções abaixo)");
+        console.log("1 - Conta Corrente.");
+        console.log("2 - Conta Poupança");
+        console.log("0 - Encerrar Atendimento");
+
+        console.log("");
+        valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
+        console.log("");
+
+        if( !((valorUsuario == 1) || (valorUsuario == 2) || (valorUsuario == 0))) {
+            valorUsuario = -1;
+            console.log("Valor não reconhecido, tente novamente");
+        }
+
+    }while(valorUsuario < 0);
+
+    console.log("-----------------------------\n");
+    return valorUsuario;
+}
+
+
+
+function definirOperacao(){
+    let valorUsuario;
+    console.log("-----------------------------");
+    console.log(`Escolha uma das opções abaixo para o que deseja fazer: `);
+    console.log("1 - Consultar saldo");
+    console.log("2 - Depositar valor");
+    console.log("3 - Sacar valor");
+    console.log("4 - Alterar nome");
+    console.log("5 - Voltar");
+    
+    console.log("");
+    valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
+    console.log("");
+
+    console.log("-----------------------------");
+
+    return valorUsuario;
+}
+
+
+// Função para pegar a escolha do usuario e transformar em alguma operação a ser executada pelo sistema do banco (depostiar, sacar, entre outros);
 function realizarOperacao(conta, operacao) {
     let valorUsuario;
+
     switch (operacao) {
         case 1:
-            console.log(`Seu saldo é de: R$${conta.pegarSaldo()}`);
+            console.log(`Seu saldo, na ${conta.pegarTipoConta()} é de: R$${conta.pegarSaldo()}`);
             break;
 
         case 2:
@@ -58,15 +123,20 @@ function realizarOperacao(conta, operacao) {
             conta.alterarNome(valorUsuario);
             break;
         
-        case 0:
-            console.log("Obrigado por escolher nossos serviços. Saindo do programa ...\n");
+        case 5:
+            valorUsuario = 5;
             break;
 
         default:
             console.log("Valor não reconhecido. Tente novamente.\n");
             break;
     }
+    console.log("");
+
+    return valorUsuario;
 }
 
 
-main();
+
+// ========================================================================
+main() // Chamando a função principal para execuçãp do código

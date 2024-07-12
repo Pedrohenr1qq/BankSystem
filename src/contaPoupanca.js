@@ -1,12 +1,16 @@
 const Conta = require("./conta");
 
 class ContaPoupanca extends Conta{
+    saldo = 0;
     rendimento = 0.05;
 
-    constructor(titular, saldo){
-        super(titular, saldo);
+    constructor(titular){
+        super(titular);
         this.titular = titular;
-        this.saldo = saldo;
+    }
+
+    pegarTipoConta(){
+        return "Conta Poupança";
     }
 
     aplicarRendimento(){
@@ -16,4 +20,4 @@ class ContaPoupanca extends Conta{
     }
 }
 
-module.exports = ContaCorrente;
+module.exports = ContaPoupanca;

@@ -1,12 +1,16 @@
 const Conta = require("./conta");
 
 class ContaCorrente extends Conta{
+    saldo = 0;
     juros = 0.1;
 
-    constructor(titular, saldo){
-        super(titular, saldo);
+    constructor(titular){
+        super(titular);
         this.titular = titular;
-        this.saldo = saldo;
+    }
+
+    pegarTipoConta(){
+        return "Conta Corrente";
     }
 
     aplicarJuros(){

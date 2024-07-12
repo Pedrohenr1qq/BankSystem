@@ -1,8 +1,9 @@
 
 class Conta{
-    constructor(titular, saldo){
+    saldo = 0;
+
+    constructor(titular){
         this.titular = titular;
-        this.saldo = saldo;
     }
 
     alterarNome(novoNome){
@@ -10,15 +11,18 @@ class Conta{
         console.log(`\nNome alterado com sucesso. Novo nome: ${this.titular}`);
     }
 
+    pegarTipoConta(){
+        return "";
+    }
+
     pegarSaldo(){
         return this.saldo;
     }
 
-
     depositar(valor){
         this.saldo+= valor;
-        console.log(`\nValor R$${valor} depositado com sucesso na conta do titular ${this.titular}!`);
-        console.log(`O saldo atual do titular ${this.titular} é de R$${this.pegarSaldo()}`);
+        console.log(`\nValor R$${valor} depositado com sucesso na ${this.pegarTipoConta()} do titular ${this.titular}!`);
+        console.log(`Seu saldo atual é de R$${this.pegarSaldo()}`);
     }
 
     sacar(valor){
@@ -29,7 +33,7 @@ class Conta{
         }else{
             console.log("\nSeu saldo é insuficiente para sacar esse valor.");
         }
-        console.log(`O saldo atual do titular ${this.titular} é de R$${this.pegarSaldo()}`);
+        console.log(`O saldo atual do titular ${this.titular}, na ${this.pegarTipoConta()}, é de R$${this.pegarSaldo()}`);
     }
 };
 

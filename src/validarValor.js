@@ -29,7 +29,7 @@ class ValidarValor{
             }
             else{
                 valorUsuario = (prompt(mensagem))
-                valorUsuario = valorUsuario.replace(/[^a-zA-Z0-9\s]/g,'');
+                valorUsuario = valorUsuario.replace(/[^a-zA-Z\s]/g,'');
                 valorValido = this.validarString(valorUsuario);
             }
 
@@ -41,7 +41,18 @@ class ValidarValor{
 
         return valorUsuario;
     }
-    
+    // ========================== TEST FUNCTIONS ==============================
+    debug(msg){
+        console.log(msg);
+        let continueProgram = false;
+        while(!continueProgram){
+            if(prompt("Continue (type anything)?  ") != ""){
+                break;
+            }
+        }
+    }
 }
+
+
 
 module.exports = ValidarValor;
