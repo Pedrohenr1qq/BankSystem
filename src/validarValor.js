@@ -41,6 +41,35 @@ class ValidarValor{
 
         return valorUsuario;
     }
+
+    validarNome(nome, tamanhoNome){                                 //Função para padronizar o nome
+        let nomePadronizado = "";
+        let casoMaiusculo = false;
+        
+        for(let i = 0; i < tamanhoNome; i++){        
+            if((i == 0) && (nome[0] != " ")){                                   // Se o primeiro caracter do nome não for um espaço em branco,
+                casoMaiusculo = true;                                                   // coloca ele em maiúsculo
+            }
+    
+            if(casoMaiusculo){
+                nomePadronizado += nome[i].toUpperCase();
+                casoMaiusculo = false;
+            }
+            else{
+                nomePadronizado += nome[i];
+            }
+            
+            if((nome[i] == " ") && ((i+1) < tamanhoNome) ){             // se houver um espaço e ele não estiver na ultima posição do nome,
+                casoMaiusculo = true;                                   // o proximo caracter deve ser maiusculo
+            }
+        }
+            
+        nomePadronizado = nomePadronizado.trim();                       // Removendo espaçoes desnecessários
+                
+        return nomePadronizado;
+    }
+
+
     // ========================== TEST FUNCTIONS ==============================
     debug(msg){
         console.log(msg);

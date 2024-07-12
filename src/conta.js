@@ -6,11 +6,6 @@ class Conta{
         this.titular = titular;
     }
 
-    alterarNome(novoNome){
-        this.titular = novoNome;
-        console.log(`\nNome alterado com sucesso. Novo nome: ${this.titular}`);
-    }
-
     pegarTipoConta(){
         return "";
     }
