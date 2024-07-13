@@ -4,8 +4,8 @@ const ContaPoupanca = require("./contaPoupanca")
 const ValidarValor = require("./validarValor");
 
 // ========================= GLOBAL VARIABLES =========================
-var validValue = new ValidarValor();
-const BACK_OPTION = 5;
+var validValue = new ValidarValor();                    // Necesário para fazer validação das entradas digitadas pelo usuário
+const BACK_OPTION = 5;                                  // Valor para que o usuário retorne a "tela"/seção principal do programa. Melhor expliacado durante o código
 
 // ======================== FUNCTION MAIN ===========================
 //Função principal do programa. Responsável pela parte sequencial do programa.
@@ -19,9 +19,9 @@ const BACK_OPTION = 5;
  * 
  * */
 function main() {
-    let valorUsuario = "";
-    let contaCorrente, contaPoupanca;
-    let contaEscolhida;
+    let valorUsuario = "";                          // Variável para pegar os valores que o usuário digitar
+    let contaCorrente, contaPoupanca;               // Variável para criar as contas do usuário
+    let contaEscolhida;                             // Variável para dar acesso a conta (corrente ou poupança) que o usuário desejar alterar
 
     console.log("Seja bem vindo caro cliente ao banco FoxBank! Vamos cadastrar seus dados ...\n");
     
@@ -33,16 +33,17 @@ function main() {
 
     let nome = pegarNome();
 
-    contaCorrente = new ContaCorrente(nome);
-    contaPoupanca = new ContaPoupanca(nome);
+    contaCorrente = new ContaCorrente(nome);                // Criando Conta Corrente do usuário
+    contaPoupanca = new ContaPoupanca(nome);                // Criando Conta Poupança do usuário
 
     console.log(`É um prazer tê-lo conosco Sr.(a) ${nome}.\n`);
 
-    valorUsuario = BACK_OPTION;
-
-    do{
+    valorUsuario = BACK_OPTION;                             // Para que o usuário tenha acesso a tela principal do programa, onde ele vai escolher o tipo de conta que ele deja movimentar
+    
+    do{                                                     // Loop principal do programa. O usuário poderá fazer as movimentações nas contas até que deseje parar
         if(valorUsuario == BACK_OPTION) {
-            valorUsuario = escolherTipoConta();
+
+            valorUsuario = escolherTipoConta();             // "Tela"/ Seção principal do programa
         
             if(valorUsuario == 1) {
                 contaEscolhida = contaCorrente;
@@ -51,19 +52,18 @@ function main() {
             }else if(valorUsuario == 3){
                 nome = pegarNome();
                 console.log(`Novo nome: ${nome}\n`);
-                valorUsuario = BACK_OPTION;
-            }
-            
+                valorUsuario = BACK_OPTION;                // "Após o usuário alterar seu nome, o programa volta à tela principal"
+            }   
         }
 
-        if((valorUsuario == 1) || (valorUsuario == 2)) {
+        if((valorUsuario == 1) || (valorUsuario == 2)) {  // Tela secundária. Onde o usuário irá fazer as movimetações em cada conta, de fato.  
             console.log(`============================ ${contaEscolhida.pegarTipoConta()} ==============================`);
-            valorUsuario = definirOperacao();
+            valorUsuario = definirOperacao();             // Operações (Ver saldo, depositar valor, sacar valor, aplicar juros/rendimento, Voltar (para a tela principal));
 
-            valorUsuario = realizarOperacao(contaEscolhida, valorUsuario);
+            valorUsuario = realizarOperacao(contaEscolhida, valorUsuario); // Aplicar uma das operações citadas acima, na referida conta
         }
 
-    }while(valorUsuario != 0);
+    }while(valorUsuario != 0);                            // 0 é a condição de término/parada do programa.
 
     }
     else{
@@ -75,20 +75,24 @@ function main() {
 }
 
 // =============================== FUNCTIONS =======================================
+// Função para pegar o nome do usuário, com verificações e padronização (Todo inicio de nome com letra maiuscula. Sem espaços no inicio e no fim).
+// Retorna uma string contendo o nome padronizado.
 function pegarNome(){
     let valorUsuario = "", nomePadronizado = "", tamanhoNome= 0;
     let casoMaiusculo = false;
-    valorUsuario = validValue.validarValorUsuario("Digite seu nome: ", "string");
+    valorUsuario = validValue.validarValorUsuario("Digite seu nome (Sem acentuação): ", "string");
 
     tamanhoNome = valorUsuario.length;
 
-    nomePadronizado = validValue.validarNome(valorUsuario, tamanhoNome);
+    nomePadronizado = validValue.validarNome(valorUsuario, tamanhoNome);  // Realizar a padronização explicada no comentário da função
 
     console.log("Nome cadastrado com sucesso!\n");
     
     return nomePadronizado;
 }
 
+// Função para escolher o tipo de conta que o usuario deseja modificar, se desejar alterar seu nome ou se deseja encerrar o programa
+// Retorna um número contendo o valor escolhido pelo usuário. Contem validação de dados
 function escolherTipoConta(){
     let valorUsuario;
 
@@ -114,6 +118,8 @@ function escolherTipoConta(){
     return valorUsuario;
 }
 
+// Função para escolher o tipo de operação que o usuário deseja fazer na conta escolhida, seja poupança ou corrente
+// Retorna o valor escolhido pelo usuário.  Possui validação de dados
 function definirOperacao(){
     let valorUsuario;
     console.log("-----------------------------");
@@ -122,7 +128,7 @@ function definirOperacao(){
     console.log("2 - Depositar valor");
     console.log("3 - Sacar valor");
     console.log("4 - Calcular novo saldo");
-    console.log(`${BACK_OPTION} - VOLTAR`);
+    console.log(`${BACK_OPTION} - VOLTAR`);         // Voltar para a tela principal do programa
     
     console.log("");
     valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
@@ -134,6 +140,16 @@ function definirOperacao(){
 
 
 // Função para pegar a escolha do usuario e transformar em alguma operação a ser executada pelo sistema do banco (depostiar, sacar, entre outros);
+
+/* OBS: Sobre o uso da variável "valorUsuario" na função abaixo:
+ *      - Usada como valor nas operações depositar e sacar
+ *      - Usada para validação de opção:
+ *          -> valorUsuario = 1 (ou 2): permitir que o usuário continue na conta escolhida e faça outras operações, até que deseje voltar para a tela/seção principal
+ *                  Aqui, não faz diferença se o valor é 1 ou 2, pois ambos caem no "if((valorUsuario == 1) || (valorUsuario == 2))", da linha 59.
+ *          
+ *          -> valorUsuario = BACK_OPTION: Caso o usuário deseje retornar para a tela/seção principal
+ * 
+*/
 function realizarOperacao(conta, operacao) {
     let valorUsuario;
 
@@ -173,8 +189,6 @@ function realizarOperacao(conta, operacao) {
 
     return valorUsuario;
 }
-
-
 
 // ========================================================================
 main() // Chamando a função principal para execuçãp do código
