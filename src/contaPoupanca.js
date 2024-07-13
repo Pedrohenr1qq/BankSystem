@@ -7,16 +7,8 @@ class ContaPoupanca extends Conta{
     constructor(titular){
         super(titular);
         this.titular = titular;
-    }
-
-    pegarTipoConta(){
-        return "Conta Poupança";
-    }
-
-    aplicarRendimento(){
-        this.saldo = this.pegarSaldo() * (1 + (this.rendimento));;
-        console.log("Saldo incrementado.")
-        console.log(`Ǹovo saldo: R$${this.pegarSaldo()}`);
+        this.alterarTipoConta("Conta Poupança");
+        this.alterarTaxa(this.rendimento);
     }
 }
 

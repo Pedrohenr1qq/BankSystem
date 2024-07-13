@@ -39,6 +39,8 @@ class ValidarValor{
 
         }while(!valorValido);
 
+        console.log("");
+
         return valorUsuario;
     }
 

@@ -3,10 +3,21 @@ const ContaCorrente = require("./contaCorrente");
 const ContaPoupanca = require("./contaPoupanca")
 const ValidarValor = require("./validarValor");
 
-// ========================= GLOBAL OBJECTS =========================
+// ========================= GLOBAL VARIABLES =========================
 var validValue = new ValidarValor();
+const BACK_OPTION = 5;
 
 // ======================== FUNCTION MAIN ===========================
+//Função principal do programa. Responsável pela parte sequencial do programa.
+
+/*  OBS: Sobre a variável "valorUsuário":
+ *  Essa variável pode parecer um pouco confusa, mas ela é algo essencial para o funcionamento do cógigo
+ *  Ela recebe todo tipo de entrada do usuário, seja String ou número
+ *  Ela é usada para:
+ *      - Validação de condição
+ *      - Receber valores do usuário
+ * 
+ * */
 function main() {
     let valorUsuario = "";
     let contaCorrente, contaPoupanca;
@@ -15,11 +26,10 @@ function main() {
     console.log("Seja bem vindo caro cliente ao banco FoxBank! Vamos cadastrar seus dados ...\n");
     
     valorUsuario = validValue.validarValorUsuario("Você quer criar uma conta (digite y|s para SIM e qualquer outro valor para NÂO) ? ", "string");
-    console.log("");
     valorUsuario = valorUsuario.toUpperCase();
 
     if((valorUsuario == 'Y') || (valorUsuario == "S")) {
-    console.log("Certo! Vamos criar sua conta. Por favor, preencha os campos abaixo:\n");
+    console.log("Certo! Vamos criar sua conta. Por favor, preencha os campos abaixo:\n");   
 
     let nome = pegarNome();
 
@@ -28,24 +38,28 @@ function main() {
 
     console.log(`É um prazer tê-lo conosco Sr.(a) ${nome}.\n`);
 
-    valorUsuario = 4;
+    valorUsuario = BACK_OPTION;
 
     do{
-        if(valorUsuario == 4) valorUsuario = escolherTipoConta();
-
-        if(valorUsuario == 1) {
-            contaEscolhida = contaCorrente;
-        }else if(valorUsuario == 2){
-            contaEscolhida = contaPoupanca;
-        }else if(valorUsuario == 3){
-            nome = pegarNome();
-            valorUsuario = 4;
+        if(valorUsuario == BACK_OPTION) {
+            valorUsuario = escolherTipoConta();
+        
+            if(valorUsuario == 1) {
+                contaEscolhida = contaCorrente;
+            }else if(valorUsuario == 2){
+                contaEscolhida = contaPoupanca;
+            }else if(valorUsuario == 3){
+                nome = pegarNome();
+                console.log(`Novo nome: ${nome}\n`);
+                valorUsuario = BACK_OPTION;
+            }
+            
         }
 
         if((valorUsuario == 1) || (valorUsuario == 2)) {
-            console.log(`============ ${contaEscolhida.pegarTipoConta()} ================`);
+            console.log(`============================ ${contaEscolhida.pegarTipoConta()} ==============================`);
             valorUsuario = definirOperacao();
-            console.log("");
+
             valorUsuario = realizarOperacao(contaEscolhida, valorUsuario);
         }
 
@@ -55,6 +69,7 @@ function main() {
     else{
         console.log("Certo!")
     }
+
     console.log("Obrigado por escolher nossos serviços. Encerrando atendimento ...\n");
     console.log("Programa finalizado!");
 }
@@ -64,6 +79,7 @@ function pegarNome(){
     let valorUsuario = "", nomePadronizado = "", tamanhoNome= 0;
     let casoMaiusculo = false;
     valorUsuario = validValue.validarValorUsuario("Digite seu nome: ", "string");
+
     tamanhoNome = valorUsuario.length;
 
     nomePadronizado = validValue.validarNome(valorUsuario, tamanhoNome);
@@ -77,7 +93,7 @@ function escolherTipoConta(){
     let valorUsuario;
 
     do{
-        console.log("-------------------------------")
+        console.log("---------------------------------------------------------------------------------------------------")
         console.log("O que você deseja fazer agora? (Escolha uma das opções abaixo)\n");
         console.log("1 - Entrar na Conta Corrente.");
         console.log("2 - Entrar na Conta Poupança");
@@ -86,7 +102,6 @@ function escolherTipoConta(){
 
         console.log("");
         valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
-        console.log("");
 
         if( !((valorUsuario == 0) || (valorUsuario == 1) || (valorUsuario == 2) || (valorUsuario == 3))) {
             valorUsuario = -1;
@@ -95,7 +110,7 @@ function escolherTipoConta(){
 
     }while(valorUsuario < 0);
 
-    console.log("-----------------------------\n");
+    console.log("--------------------------------------------------------------------------------------------------------\n");
     return valorUsuario;
 }
 
@@ -106,12 +121,11 @@ function definirOperacao(){
     console.log("1 - Consultar saldo");
     console.log("2 - Depositar valor");
     console.log("3 - Sacar valor");
-    //console.log("4 - Alterar nome");
-    console.log("4 - Voltar");
+    console.log("4 - Calcular novo saldo");
+    console.log(`${BACK_OPTION} - VOLTAR`);
     
     console.log("");
     valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
-    console.log("");
 
     console.log("-----------------------------");
 
@@ -125,7 +139,7 @@ function realizarOperacao(conta, operacao) {
 
     switch (operacao) {
         case 1:
-            console.log(`Seu saldo, na ${conta.pegarTipoConta()} é de: R$${conta.pegarSaldo()}`);
+            console.log(`Seu saldo, na ${(conta.pegarTipoConta())} é de: R$${conta.pegarSaldo()}`);
             valorUsuario = 1;
             break;
 
@@ -142,11 +156,16 @@ function realizarOperacao(conta, operacao) {
             break;
             
         case 4:
-            valorUsuario = 4;
+            conta.calcularNovoSaldo();
+            valorUsuario = 1;
+            break;
+
+        case BACK_OPTION:
+            valorUsuario = BACK_OPTION;
             break;
 
         default:
-            console.log("Valor não reconhecido. Tente novamente.\n");
+            console.log("Valor não reconhecido. Tente novamente.");
             valorUsuario = 1;
             break;
     }
