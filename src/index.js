@@ -1,10 +1,11 @@
-// ======================== DEPENDENCIES ============================
-const ContaCorrente = require("./contaCorrente");
-const ContaPoupanca = require("./contaPoupanca")
-const ValidarValor = require("./validarValor");
+
+// ======================== IMPORTS ========================== 
+import ContaCorrente from './Contas/contaCorrente.js';
+import ContaPoupanca from './Contas/contaPoupanca.js';
+import validarValorUsuario from './validarValor.js';
+import {pegarNome, pegarDataNascimento, pegarTelefone, pegarEmail, pegarSenha} from './Getters/Getters.js';
 
 // ========================= GLOBAL VARIABLES =========================
-var validValue = new ValidarValor();                    // Necesário para fazer validação das entradas digitadas pelo usuário
 const BACK_OPTION = 5;                                  // Valor para que o usuário retorne a "tela"/seção principal do programa. Melhor expliacado durante o código
 
 // ======================== FUNCTION MAIN ===========================
@@ -23,47 +24,76 @@ function main() {
     let contaCorrente, contaPoupanca;               // Variável para criar as contas do usuário
     let contaEscolhida;                             // Variável para dar acesso a conta (corrente ou poupança) que o usuário desejar alterar
 
+    console.log("\n==================== FOX BANK =======================\n");
+
     console.log("Seja bem vindo caro cliente ao banco FoxBank! Vamos cadastrar seus dados ...\n");
     
-    valorUsuario = validValue.validarValorUsuario("Você quer criar uma conta (digite y|s para SIM e qualquer outro valor para NÂO) ? ", "string");
-    valorUsuario = valorUsuario.toUpperCase();
+    valorUsuario = validarValorUsuario("Você quer criar uma conta (digite y|s para SIM e qualquer outro valor para NÂO) ? ", "string").toUpperCase();
 
     if((valorUsuario == 'Y') || (valorUsuario == "S")) {
-    console.log("Certo! Vamos criar sua conta. Por favor, preencha os campos abaixo:\n");   
+        console.log("Certo! Vamos criar sua conta. Por favor, preencha os campos abaixo:\n");   
 
-    let nome = pegarNome();
+        //Pegando os dados de nome, data de nascimento, telefone, email e senha do usuário;
 
-    contaCorrente = new ContaCorrente(nome);                // Criando Conta Corrente do usuário
-    contaPoupanca = new ContaPoupanca(nome);                // Criando Conta Poupança do usuário
+        let nome = pegarNome();
+        console.log(`${nome}, seu foi cadastrado com sucesso!\n`);
 
-    console.log(`É um prazer tê-lo conosco Sr.(a) ${nome}.\n`);
+        let dataNascimento = pegarDataNascimento();
+        console.log(`${nome}, sua data de nascimento (${dataNascimento}) foi cadastrada com sucesso\n`);
 
-    valorUsuario = BACK_OPTION;                             // Para que o usuário tenha acesso a tela principal do programa, onde ele vai escolher o tipo de conta que ele deja movimentar
-    
-    do{                                                     // Loop principal do programa. O usuário poderá fazer as movimentações nas contas até que deseje parar
-        if(valorUsuario == BACK_OPTION) {
+        let telefone = pegarTelefone();
+        console.log(`${nome}, seu telefone (${telefone}) foi cadastrado com sucesso\n`);
 
-            valorUsuario = escolherTipoConta();             // "Tela"/ Seção principal do programa
+        let email = pegarEmail();
+        console.log(`${nome}, seu e-mail (${email}) foi cadastrado com sucesso\n`);
+
+        let senha = pegarSenha();
+        let senhaOculta = senha.replace(/[0-9a-zA-Z]/g, '*');
+        console.log(`${nome}, sua senha (${senhaOculta}) foi cadastrada com sucesso\n`);
+
+
+
+        // Criando Conta Corrente do usuário
+        contaCorrente = new ContaCorrente(nome, dataNascimento, telefone, email, senha);                
+        // Criando Conta Poupança do usuário
+        contaPoupanca = new ContaPoupanca(nome, dataNascimento, telefone, email, senha);
         
-            if(valorUsuario == 1) {
-                contaEscolhida = contaCorrente;
-            }else if(valorUsuario == 2){
-                contaEscolhida = contaPoupanca;
-            }else if(valorUsuario == 3){
-                nome = pegarNome();
-                console.log(`Novo nome: ${nome}\n`);
-                valorUsuario = BACK_OPTION;                // "Após o usuário alterar seu nome, o programa volta à tela principal"
-            }   
-        }
+        
+        //Mostrando dados cadastrados:
+        console.log("Novo cliente cadastrado:");
 
-        if((valorUsuario == 1) || (valorUsuario == 2)) {  // Tela secundária. Onde o usuário irá fazer as movimetações em cada conta, de fato.  
-            console.log(`============================ ${contaEscolhida.pegarTipoConta()} ==============================`);
-            valorUsuario = definirOperacao();             // Operações (Ver saldo, depositar valor, sacar valor, aplicar juros/rendimento, Voltar (para a tela principal));
+        // A utilização da conta corrente é somente para pegar o método mostrarDadosUsuario. Poderia ser feita utilizando ContaPoupança;
+        contaCorrente.mostrarDadosUsuario();       
 
-            valorUsuario = realizarOperacao(contaEscolhida, valorUsuario); // Aplicar uma das operações citadas acima, na referida conta
-        }
 
-    }while(valorUsuario != 0);                            // 0 é a condição de término/parada do programa.
+        console.log(`É um prazer tê-lo conosco Sr.(a) ${nome}.\n`);
+
+        valorUsuario = BACK_OPTION;                             // Para que o usuário tenha acesso a tela principal do programa, onde ele vai escolher o tipo de conta que ele deja movimentar
+        
+        do{                                                     // Loop principal do programa. O usuário poderá fazer as movimentações nas contas até que deseje parar
+            if(valorUsuario == BACK_OPTION) {
+
+                valorUsuario = escolherTipoConta();             // "Tela"/ Seção principal do programa
+            
+                if(valorUsuario == 1) {
+                    contaEscolhida = contaCorrente;
+                }else if(valorUsuario == 2){
+                    contaEscolhida = contaPoupanca;
+                }else if(valorUsuario == 3){
+                    nome = pegarNome();
+                    console.log(`Novo nome: ${nome}\n`);
+                    valorUsuario = BACK_OPTION;                // "Após o usuário alterar seu nome, o programa volta à tela principal"
+                }   
+            }
+
+            if((valorUsuario == 1) || (valorUsuario == 2)) {  // Tela secundária. Onde o usuário irá fazer as movimetações em cada conta, de fato.  
+                console.log(`============================ ${contaEscolhida.pegarTipoConta()} ==============================`);
+                valorUsuario = definirOperacao();             // Operações (Ver saldo, depositar valor, sacar valor, aplicar juros/rendimento, Voltar (para a tela principal));
+
+                valorUsuario = realizarOperacao(contaEscolhida, valorUsuario); // Aplicar uma das operações citadas acima, na referida conta
+            }
+
+        }while(valorUsuario != 0);                            // 0 é a condição de término/parada do programa.
 
     }
     else{
@@ -75,22 +105,6 @@ function main() {
 }
 
 // =============================== FUNCTIONS =======================================
-// Função para pegar o nome do usuário, com verificações e padronização (Todo inicio de nome com letra maiuscula. Sem espaços no inicio e no fim).
-// Retorna uma string contendo o nome padronizado.
-function pegarNome(){
-    let valorUsuario = "", nomePadronizado = "", tamanhoNome= 0;
-    let casoMaiusculo = false;
-    valorUsuario = validValue.validarValorUsuario("Digite seu nome (Sem acentuação): ", "string");
-
-    tamanhoNome = valorUsuario.length;
-
-    nomePadronizado = validValue.validarNome(valorUsuario, tamanhoNome);  // Realizar a padronização explicada no comentário da função
-
-    console.log("Nome cadastrado com sucesso!\n");
-    
-    return nomePadronizado;
-}
-
 // Função para escolher o tipo de conta que o usuario deseja modificar, se desejar alterar seu nome ou se deseja encerrar o programa
 // Retorna um número contendo o valor escolhido pelo usuário. Contem validação de dados
 function escolherTipoConta(){
@@ -105,7 +119,7 @@ function escolherTipoConta(){
         console.log("0 - Encerrar Atendimento");
 
         console.log("");
-        valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
+        valorUsuario = validarValorUsuario("Digite sua escolha: ", "numero");
 
         if( !((valorUsuario == 0) || (valorUsuario == 1) || (valorUsuario == 2) || (valorUsuario == 3))) {
             valorUsuario = -1;
@@ -131,7 +145,7 @@ function definirOperacao(){
     console.log(`${BACK_OPTION} - VOLTAR`);         // Voltar para a tela principal do programa
     
     console.log("");
-    valorUsuario = validValue.validarValorUsuario("Digite sua escolha: ", "numero");
+    valorUsuario = validarValorUsuario("Digite sua escolha: ", "numero");
 
     console.log("-----------------------------");
 
@@ -160,13 +174,13 @@ function realizarOperacao(conta, operacao) {
             break;
 
         case 2:
-            valorUsuario = validValue.validarValorUsuario("Digite o valor que você quer depositar: R$", "numero");
+            valorUsuario = validarValorUsuario("Digite o valor que você quer depositar: R$", "numero");
             conta.depositar(valorUsuario);
             valorUsuario = 1;
             break;
 
         case 3:
-            valorUsuario = validValue.validarValorUsuario("Digite o valor que você quer sacar: R$", "numero");
+            valorUsuario = validarValorUsuario("Digite o valor que você quer sacar: R$", "numero");
             conta.sacar(valorUsuario);
             valorUsuario = 1;
             break;

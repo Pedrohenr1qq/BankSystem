@@ -1,17 +1,16 @@
 // Classe derivada da classe Conta, tendo suas variáveis e métodos herdados
 
-const Conta = require("./conta");
+import Conta from "./conta.js";
 
 class ContaCorrente extends Conta{
     juros = 0.1;
 
-    constructor(titular){
-        super(titular);
-        this.titular = titular;
+    constructor(titular, dataNascimento, telefone, email, senha){
+        super(titular, dataNascimento, telefone, email, senha);
         this.alterarTipoConta("Conta Corrente");
         this.alterarTaxa(this.juros);   // Alterando taxa para o calculo do novo saldo na Conta Corrente
     } 
 
 }
 
-module.exports = ContaCorrente;
+export default ContaCorrente;

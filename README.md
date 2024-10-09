@@ -1,5 +1,4 @@
 # BankSystem
-
 Um simples sistema de banco. Feito em JavaScript e Node.Js.
 
 ## Sobre o sistema

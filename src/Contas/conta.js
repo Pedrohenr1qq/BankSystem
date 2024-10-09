@@ -5,11 +5,24 @@ class Conta{
     saldo = 0;
     taxa = 0;           //Juros, para Conta Corrente e rendimento, para Conta Poupança
 
-    constructor(titular){
+    constructor(titular, dataNascimento, telefone, email, senha){
         this.titular = titular;
+        this.dataNascimento = dataNascimento;
+        this.telefone = telefone;
+        this.email = email; 
+        this.senha = senha;
     }
 
     // Funções para utilização interna do programa
+    mostrarDadosUsuario(){
+        console.log("============= CLIENTE ============");
+        console.log("Titular: "+ this.titular);
+        console.log("Data de nascimento: "+ this.dataNascimento);
+        console.log("Telefone: "+ this.telefone);
+        console.log("E-mail: " +this.email);
+        console.log("==================================\n");
+    }
+
     pegarTipoConta(){
         return this.tipoConta;
     }
@@ -56,5 +69,5 @@ class Conta{
 
 };
 
-module.exports = Conta;
+export default Conta;
 
